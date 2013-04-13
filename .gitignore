@@ -1,0 +1,8 @@
+*.suo
+*.ncb
+*.user
+*.aps
+debug
+Debug
+release
+Release
