@@ -1,5 +1,5 @@
 
-#define _WIN32_WINNT 0x400
+#define _WIN32_WINNT 0x501
 #include <windows.h>
 #include <tchar.h>
 #include <stdio.h>
