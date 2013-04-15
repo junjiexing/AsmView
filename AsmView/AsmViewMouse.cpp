@@ -327,7 +327,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 	ULONG fileoff = 0;
 
 	TCHAR buf[TEXTBUFSIZE];
-	int   len;
+	int   len = 0;
 	int	  curx = 0;
 	RECT  rect;
 
@@ -361,83 +361,100 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 
 	mx += m_nHScrollPos * m_nFontWidth;
 
+	len = m_pTextDoc->getline(nLineNo, charoff, buf, TEXTBUFSIZE, &fileoff);
+	int xxx = 0;
+	for (int i=0;i<len;++i)
+	{
+		if (i && IsDBCSLeadByte(buf[i-1]))
+		{
+			++i;
+		}
+
+		SIZE sz;
+		GetTextExtentPoint32(hdc, buf, i, &sz);
+		if (sz.cx>mx)
+		{
+			break;
+		}
+		xxx = sz.cx;
+	}
 	// character offset within the line is more complicated. We have to 
 	// parse the text.
-	for(;;)
-	{
-		// grab some text
-		if((len = m_pTextDoc->getline(nLineNo, charoff, buf, TEXTBUFSIZE, &fileoff)) == 0)
-			break;
-
-		int tlen=len;
-
-		if(len > 1 && buf[len-2] == '\r')
-		{
-			buf[len-2]=0;
-			len-=2;
-		}
-
-		// find it's width
-		int width = NeatTextWidth(hdc, buf, len, -(curx % TabWidth()));
-
-		// does cursor fall within this segment?
-		if(mx >= curx && mx < curx + width)
-		{ 
-			//
-			//	We have a range of text, with the mouse 
-			//  somewhere in the middle. Perform a "binary chop" to
-			//  locate the exact character that the mouse is positioned over
-			//
-			int low   = 0;
-			int high  = len;
-			int lowx  = 0;
-			int highx = width;
-	
-			while(low < high - 1)
-			{
-				int newlen   = (high - low) / 2;
-
-				width = NeatTextWidth(hdc, buf + low, newlen, -lowx-curx);
-
-				if(mx-curx < width + lowx)
-				{
-					high  = low + newlen;
-					highx = lowx + width;
-				}
-				else
-				{
-					low   = low + newlen;
-					lowx  = lowx + width;
-				}
-			}
-
-			// base coordinates on centre of characters, not the edges
-			if(mx - curx > highx - m_nFontWidth/2)
-			{
-				curx    += highx;
-				charoff += high;
-			}
-			else
-			{
-				curx    += lowx;
-				charoff += low;
-			}
-			
-			*pnCharOffset = charoff;
-			break;
-		}
-
-		curx			+= width;
-		charoff			+= tlen;
-		*pnCharOffset	+= len;
-	}
+// 	for(;;)
+// 	{
+// 		// grab some text
+// 		if((len = m_pTextDoc->getline(nLineNo, charoff, buf, TEXTBUFSIZE, &fileoff)) == 0)
+// 			break;
+// 
+// 		int tlen=len;
+// 
+// 		if(len > 1 && buf[len-2] == '\r')
+// 		{
+// 			buf[len-2]=0;
+// 			len-=2;
+// 		}
+// 
+// 		// find it's width
+// 		int width = NeatTextWidth(hdc, buf, len, -(curx % TabWidth()));
+// 
+// 		// does cursor fall within this segment?
+// 		if(mx >= curx && mx < curx + width)
+// 		{ 
+// 			//
+// 			//	We have a range of text, with the mouse 
+// 			//  somewhere in the middle. Perform a "binary chop" to
+// 			//  locate the exact character that the mouse is positioned over
+// 			//
+// 			int low   = 0;
+// 			int high  = len;
+// 			int lowx  = 0;
+// 			int highx = width;
+// 	
+// 			while(low < high - 1)
+// 			{
+// 				int newlen   = (high - low) / 2;
+// 
+// 				width = NeatTextWidth(hdc, buf + low, newlen, -lowx-curx);
+// 
+// 				if(mx-curx < width + lowx)
+// 				{
+// 					high  = low + newlen;
+// 					highx = lowx + width;
+// 				}
+// 				else
+// 				{
+// 					low   = low + newlen;
+// 					lowx  = lowx + width;
+// 				}
+// 			}
+// 
+// 			// base coordinates on centre of characters, not the edges
+// 			if(mx - curx > highx - m_nFontWidth/2)
+// 			{
+// 				curx    += highx;
+// 				charoff += high;
+// 			}
+// 			else
+// 			{
+// 				curx    += lowx;
+// 				charoff += low;
+// 			}
+// 			
+// 			*pnCharOffset = charoff;
+// 			break;
+// 		}
+// 
+// 		curx			+= width;
+// 		charoff			+= tlen;
+// 		*pnCharOffset	+= len;
+// 	}
 
 	SelectObject(hdc, hOldFont);
 	ReleaseDC(m_hWnd, hdc);
 
 	*pnLineNo		= nLineNo;
 	*pfnFileOffset	= fileoff + *pnCharOffset;
-	*px				= curx - m_nHScrollPos * m_nFontWidth;
+	*px				= xxx - m_nHScrollPos * m_nFontWidth;
 	*px				+= LeftMarginWidth();
 
 	return 0;

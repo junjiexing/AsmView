@@ -29,13 +29,13 @@ void PaintRect(HDC hdc, RECT *rect, COLORREF fill)
 //
 //	Return width of specified control-character
 //
-int AsmView::CtrlCharWidth(HDC hdc, ULONG chValue, FONT *font)
-{
-	SIZE sz;
-	const char *str = CtrlStr(chValue % 32);
-	GetTextExtentPoint32(hdc, str, strlen(str), &sz);
-	return sz.cx + 4;
-}
+// int AsmView::CtrlCharWidth(HDC hdc, ULONG chValue, FONT *font)
+// {
+// 	SIZE sz;
+// 	const char *str = CtrlStr(chValue % 32);
+// 	GetTextExtentPoint32(hdc, str, strlen(str), &sz);
+// 	return sz.cx + 4;
+// }
 
 //
 //	AsmView::
@@ -61,9 +61,10 @@ int AsmView::NeatTextWidth(HDC hdc, TCHAR *buf, int len, int nTabOrigin)
 
 	for(int i = 0, lasti = 0; i <= len; i++)
 	{
-		if(i == len || buf[i] == '\t' || (TBYTE)buf[i] < 32)
+		if(i == len || buf[i] == '\t'/* || (TBYTE)buf[i] < 32*/)
 		{
 			GetTextExtentPoint32(hdc, buf + lasti, i - lasti, &sz);
+			//GetTextExtentExPoint(hdc, buf + lasti, i - lasti,0,NULL,NULL,&sz);
 			width += sz.cx;
 
 			if(i < len && buf[i] == '\t')
@@ -71,11 +72,11 @@ int AsmView::NeatTextWidth(HDC hdc, TCHAR *buf, int len, int nTabOrigin)
 				width += TABWIDTHPIXELS - ((width - nTabOrigin) % TABWIDTHPIXELS);
 				lasti  = i + 1;
 			}
-			else if(i < len && (TBYTE)buf[i] < 32)
-			{
-				width += CtrlCharWidth(hdc, buf[i], &m_FontAttr[0]);
-				lasti  = i + 1;
-			}
+// 			else if(i < len && (TBYTE)buf[i] < 32)
+// 			{
+// 				width += CtrlCharWidth(hdc, buf[i], &m_FontAttr[0]);
+// 				lasti  = i + 1;
+// 			}
 		}
 	}
 
@@ -157,47 +158,47 @@ void AsmView::InitCtrlCharFontAttr(HDC hdc, FONT *font)
 //	Display an ASCII control character in inverted colours
 //  to what is currently set in the DC
 //
-int AsmView::PaintCtrlChar(HDC hdc, int xpos, int ypos, ULONG chValue, FONT *font)
-{
-	SIZE  sz;
-	RECT  rect;
-	const char *str = CtrlStr(chValue % 32);
-
-	int yoff = NeatTextYOffset(font);
-
-	COLORREF fg = GetTextColor(hdc);
-	COLORREF bg = GetBkColor(hdc); 
-
-	// find out how big the text will be
-	GetTextExtentPoint32(hdc, str, strlen(str), &sz);
-	SetRect(&rect, xpos, ypos, xpos + sz.cx + 4, ypos + m_nLineHeight);
-
-	// paint the background white
-	if(GetBkMode(hdc) == OPAQUE)
-		PaintRect(hdc, &rect, bg);
-
-	// adjust rectangle for first black block
-	rect.right  -= 1;
-	rect.top    += font->nInternalLeading + yoff;
-	rect.bottom =  rect.top + font->tm.tmHeight - font->nDescent - font->nInternalLeading;
-
-	// paint the first black block
-	PaintRect(hdc, &rect, fg);
-	
-	// prepare device context
-	fg = SetTextColor(hdc, bg);
-	bg = SetBkColor(hdc, fg);
-	
-	// paint the text and the second "black" block at the same time
-	InflateRect(&rect, -1, 1);
-	ExtTextOut(hdc, xpos+1, ypos+yoff, ETO_OPAQUE|ETO_CLIPPED, &rect, str, strlen(str), 0);
-	
-	// restore device context
-	SetTextColor(hdc, fg);
-	SetBkColor(hdc, bg);
-	
-	return sz.cx + 4;
-}
+// int AsmView::PaintCtrlChar(HDC hdc, int xpos, int ypos, ULONG chValue, FONT *font)
+// {
+// 	SIZE  sz;
+// 	RECT  rect;
+// 	const char *str = CtrlStr(chValue % 32);
+// 
+// 	int yoff = NeatTextYOffset(font);
+// 
+// 	COLORREF fg = GetTextColor(hdc);
+// 	COLORREF bg = GetBkColor(hdc); 
+// 
+// 	// find out how big the text will be
+// 	GetTextExtentPoint32(hdc, str, strlen(str), &sz);
+// 	SetRect(&rect, xpos, ypos, xpos + sz.cx + 4, ypos + m_nLineHeight);
+// 
+// 	// paint the background white
+// 	if(GetBkMode(hdc) == OPAQUE)
+// 		PaintRect(hdc, &rect, bg);
+// 
+// 	// adjust rectangle for first black block
+// 	rect.right  -= 1;
+// 	rect.top    += font->nInternalLeading + yoff;
+// 	rect.bottom =  rect.top + font->tm.tmHeight - font->nDescent - font->nInternalLeading;
+// 
+// 	// paint the first black block
+// 	PaintRect(hdc, &rect, fg);
+// 	
+// 	// prepare device context
+// 	fg = SetTextColor(hdc, bg);
+// 	bg = SetBkColor(hdc, fg);
+// 	
+// 	// paint the text and the second "black" block at the same time
+// 	InflateRect(&rect, -1, 1);
+// 	ExtTextOut(hdc, xpos+1, ypos+yoff, ETO_OPAQUE|ETO_CLIPPED, &rect, str, strlen(str), 0);
+// 	
+// 	// restore device context
+// 	SetTextColor(hdc, fg);
+// 	SetBkColor(hdc, bg);
+// 	
+// 	return sz.cx + 4;
+// }
 
 //
 //	Update the lineheight based on current font settings

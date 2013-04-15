@@ -1,7 +1,7 @@
 #ifndef AsmView_INTERNAL_INCLUDED
 #define AsmView_INTERNAL_INCLUDED
 
-#define TEXTBUFSIZE  32
+#define TEXTBUFSIZE  100
 #define LINENO_FMT  _T(" %d ")
 #define LINENO_PAD	 8
 
@@ -111,7 +111,7 @@ private:
 	int   ApplyTextAttributes(ULONG nLineNo, ULONG offset, ULONG &nColumn, TCHAR *szText, int nTextLen, ATTR *attr);
 	int   NeatTextOut(HDC hdc, int xpos, int ypos, TCHAR *szText, int nLen, int nTabOrigin, ATTR *attr);
 	
-	int  PaintCtrlChar(HDC hdc, int xpos, int ypos, ULONG chValue, FONT *fa);
+	//int  PaintCtrlChar(HDC hdc, int xpos, int ypos, ULONG chValue, FONT *fa);
 	void InitCtrlCharFontAttr(HDC hdc, FONT *fa);
 
 	void RefreshWindow();
@@ -119,7 +119,7 @@ private:
 	LONG InvalidateLine(ULONG nLineNo);
 	VOID UpdateLine(ULONG nLineNo);
 
-	int  CtrlCharWidth(HDC hdc, ULONG chValue, FONT *fa);
+	//int  CtrlCharWidth(HDC hdc, ULONG chValue, FONT *fa);
 	int  NeatTextYOffset(FONT *font);
 	int  NeatTextWidth(HDC hdc, TCHAR *buf, int len, int nTabOrigin);
 	int	 TabWidth();

@@ -455,8 +455,9 @@ int AsmView::NeatTextOut(HDC hdc, int xpos, int ypos, TCHAR *szText, int nLen, i
 	{
 		int  yoff = NeatTextYOffset(font);
 
+		
 		// output any "deferred" text before handling tab/control chars
-		if(i == nLen || szText[i] == '\t' || (TBYTE)szText[i] < 32)
+		if(i == nLen || szText[i] == '\t'/* || (TBYTE)szText[i] < 32*/)
 		{
 			RECT rect;
 
@@ -486,12 +487,12 @@ int AsmView::NeatTextOut(HDC hdc, int xpos, int ypos, TCHAR *szText, int nLen, i
 				xpos += width;
 				lasti = i + 1;
 			}
-			// ASCII-CONTROL characters
-			else if((TBYTE)szText[i] < 32)
-			{
-				xpos += PaintCtrlChar(hdc, xpos, ypos, szText[i], font);
-				lasti = i + 1;
-			}
+// 			// ASCII-CONTROL characters
+// 			else if((TBYTE)szText[i] < 32)
+// 			{
+// 				xpos += PaintCtrlChar(hdc, xpos, ypos, szText[i], font);
+// 				lasti = i + 1;
+// 			}
 		}
 	}
 
