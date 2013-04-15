@@ -224,13 +224,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			AsmView_SetImageList(g_hwndAsmView, hImgList);
 			AsmView_SetLineImage(g_hwndAsmView, 5,  2);
 
-			AsmView_SetLineSpacing(g_hwndAsmView, 5, 5);
+			AsmView_SetLineSpacing(g_hwndAsmView, 5, 3);
 
 			AsmView_SetStyleBool(g_hwndAsmView, TXS_SELMARGIN,	TRUE);
-			AsmView_SetStyleBool(g_hwndAsmView, TXS_LINENUMBERS,	FALSE);
+			AsmView_SetStyleBool(g_hwndAsmView, TXS_LINENUMBERS,	TRUE);
 			AsmView_SetStyleBool(g_hwndAsmView, TXS_LONGLINES,	FALSE);
 			AsmView_SetStyleBool(g_hwndAsmView, TXS_HIGHLIGHTCURLINE,	TRUE);
-			AsmView_SetCaretWidth(g_hwndAsmView, 2);
+			AsmView_SetCaretWidth(g_hwndAsmView, 1);
 
 			HDC hdc      = GetDC(0);
 			int nLogSize = 0-MulDiv(10, GetDeviceCaps(hdc, LOGPIXELSY), 72);
