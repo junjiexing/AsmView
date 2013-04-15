@@ -376,6 +376,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 		{
 			break;
 		}
+		*pnCharOffset = i;
 		xxx = sz.cx;
 	}
 	// character offset within the line is more complicated. We have to 
