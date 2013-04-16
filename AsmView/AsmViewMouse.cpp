@@ -362,7 +362,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 	mx += m_nHScrollPos * m_nFontWidth;
 
 	len = m_pTextDoc->getline(nLineNo, charoff, buf, TEXTBUFSIZE, &fileoff);
-	int xxx = 0;
+	int last_x = 0;
 	for (int i=0;i<=len;++i)
 	{
 		if (i && IsDBCSLeadByte(buf[i-1]))
@@ -372,12 +372,12 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 
 		SIZE sz;
 		GetTextExtentPoint32(hdc, buf, i, &sz);
-		if (sz.cx>=mx+4)
+		if (sz.cx>=mx+(sz.cx-last_x)/2)
 		{
 			break;
 		}
 		*pnCharOffset = i;
-		xxx = sz.cx;
+		last_x = sz.cx;
 	}
 	// character offset within the line is more complicated. We have to 
 	// parse the text.
@@ -455,7 +455,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 
 	*pnLineNo		= nLineNo;
 	*pfnFileOffset	= fileoff + *pnCharOffset;
-	*px				= xxx - m_nHScrollPos * m_nFontWidth;
+	*px				= last_x - m_nHScrollPos * m_nFontWidth;
 	*px				+= LeftMarginWidth();
 
 	return 0;
