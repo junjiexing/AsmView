@@ -363,7 +363,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 
 	len = m_pTextDoc->getline(nLineNo, charoff, buf, TEXTBUFSIZE, &fileoff);
 	int xxx = 0;
-	for (int i=0;i<len;++i)
+	for (int i=0;i<=len;++i)
 	{
 		if (i && IsDBCSLeadByte(buf[i-1]))
 		{
@@ -372,7 +372,7 @@ BOOL AsmView::MouseCoordToFilePos(	int		 mx,			// [in]  mouse x-coord
 
 		SIZE sz;
 		GetTextExtentPoint32(hdc, buf, i, &sz);
-		if (sz.cx>mx)
+		if (sz.cx>=mx+4)
 		{
 			break;
 		}

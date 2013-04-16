@@ -233,7 +233,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			AsmView_SetCaretWidth(g_hwndAsmView, 1);
 
 			HDC hdc      = GetDC(0);
-			int nLogSize = 0-MulDiv(10, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+			int nLogSize = 0-MulDiv(10, GetDeviceCaps(hdc, LOGPIXELSY), 50);
 			ReleaseDC(0, hdc);
 			HFONT hFont = CreateFont(nLogSize, 
 				0, 0, 0, 
