@@ -1,7 +1,7 @@
 #ifndef AsmView_INTERNAL_INCLUDED
 #define AsmView_INTERNAL_INCLUDED
 
-#define TEXTBUFSIZE  100
+#define TEXTBUFSIZE  500
 #define LINENO_FMT  _T(" %d ")
 #define LINENO_PAD	 8
 
