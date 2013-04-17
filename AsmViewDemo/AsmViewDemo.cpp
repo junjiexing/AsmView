@@ -222,7 +222,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				);
 
 			AsmView_SetImageList(g_hwndAsmView, hImgList);
-			AsmView_SetLineImage(g_hwndAsmView, 5,  2);
+			AsmView_SetLineImage(g_hwndAsmView, 0,  1);
+			AsmView_SetLineImage(g_hwndAsmView, 3,  2);
+			AsmView_SetLineImage(g_hwndAsmView, 4,  3);
+			AsmView_SetLineImage(g_hwndAsmView, 5,  4);
 
 			AsmView_SetLineSpacing(g_hwndAsmView, 5, 3);
 
